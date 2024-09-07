@@ -8,4 +8,4 @@ connection  : "local"
 # Fetch RDS Endpoint address 
 region                : us-west-2  
 db_access_config_path : "/home/ec2-user/wp-config.php"
-db_instance_identifier: wordpressappdb
+db_identifier         : wordpressappdb

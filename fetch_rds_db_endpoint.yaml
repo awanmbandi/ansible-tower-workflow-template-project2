@@ -11,7 +11,7 @@
   tasks:
     - name: Fetch RDS instance details
       rds_instance_info:
-        db_instance_identifier: "{{ db_instance_identifier }}"
+        db_instance_identifier: "{{ db_identifier }}"
         region                : "{{ region }}"
       register                : rds_info
 
