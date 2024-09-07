@@ -26,7 +26,7 @@ webapp_instance_user_data_script: |
                                   sudo su
                                   useradd ansibletower -m
                                   echo "ansibletower:ansibletower" | chpasswd 
-                                  sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+                                  sudo sed -i '/^#PasswordAuthentication /s/^#//' /etc/ssh/sshd_config 
                                   sudo sh -c 'grep -q "^ChallengeResponseAuthentication " /etc/ssh/sshd_config || echo "ChallengeResponseAuthentication yes" >> /etc/ssh/sshd_config' 
                                   systemctl restart sshd
                                   echo "ansibletower ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
