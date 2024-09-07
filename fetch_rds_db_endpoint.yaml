@@ -1,29 +1,31 @@
 ---
-- name: Retrieve RDS Endpoint and Store in File
-  hosts: localhost
-  gather_facts: no
+- name: "{{ play_name }}"
+  hosts: "{{ hosts }}"
+  connection: "{{ connection }}"
+  gather_facts: "{{ gather_facts }}"
+  vars_files:
+    - variables/vars_fetch_rds_db_endpoint.yaml
   vars:
-    region       : us-west-2  
-    db_identifier: wordpressappdb
-    output_file  : "/home/ec2-user/rds_endpoint.php"  # Path to the file where the endpoint will be stored
+    ansible_python_interpreter: /usr/bin/python3
 
   tasks:
     - name: Fetch RDS instance details
-      rds_instance_info:
+      amazon.aws.rds_instance_info:
         db_instance_identifier: "{{ db_identifier }}"
-        region: "{{ region }}"
-      register: rds_info
+        region                : "{{ region }}"
+      register                : rds_info
 
-    - name: Set the RDS endpoint fact
+    - name: Set the RDS endpoint DNS fact
       set_fact:
         rds_endpoint: "{{ rds_info.instances[0].endpoint.address }}"
 
-    - name: Store RDS endpoint in a file
-      copy:
-        content: "{{ rds_endpoint }}"
-        dest: "{{ output_file }}"
-        mode: '0644'
+    - name: Ensure the wp-config.php file contains the RDS endpoint
+      lineinfile:
+        path    : "{{ db_access_config_path }}"
+        regexp  : "define\\(\\s*'DB_HOST'\\s*,\\s*'.*'\\s*\\);"
+        line    : "define('DB_HOST', '{{ rds_endpoint }}');"
+        backup  : yes
 
     - name: Debug RDS endpoint
       debug:
-        msg: "RDS Endpoint: {{ rds_endpoint }} stored in {{ output_file }}"
+        msg: "RDS Endpoint: {{ rds_endpoint }}"

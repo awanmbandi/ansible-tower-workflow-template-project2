@@ -1,0 +1,29 @@
+---
+- name: Retrieve RDS Endpoint and Store in File
+  hosts: localhost
+  gather_facts: no
+  vars:
+    region       : us-west-2  
+    db_identifier: wordpressappdb
+    output_file  : "/home/ec2-user/rds_endpoint.php"  # Path to the file where the endpoint will be stored
+
+  tasks:
+    - name: Fetch RDS instance details
+      rds_instance_info:
+        db_instance_identifier: "{{ db_identifier }}"
+        region: "{{ region }}"
+      register: rds_info
+
+    - name: Set the RDS endpoint fact
+      set_fact:
+        rds_endpoint: "{{ rds_info.instances[0].endpoint.address }}"
+
+    - name: Store RDS endpoint in a file
+      copy:
+        content: "{{ rds_endpoint }}"
+        dest: "{{ output_file }}"
+        mode: '0644'
+
+    - name: Debug RDS endpoint
+      debug:
+        msg: "RDS Endpoint: {{ rds_endpoint }} stored in {{ output_file }}"
