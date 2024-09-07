@@ -15,6 +15,7 @@
         description   : "{{ db_subnet_group_description }}"
         subnets       : "{{ db_subnets }}"
         state         : "{{ state }}"
+        region        : "{{ aws_region }}"
       register        : subnet_group_result
 
     - name : Debug Subnet Group Result
