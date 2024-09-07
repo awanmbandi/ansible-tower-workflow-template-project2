@@ -10,7 +10,7 @@
 
   tasks:
     - name: Fetch RDS instance details
-      amazon.aws.rds_instance_info:
+      rds_instance_info:
         db_instance_identifier: "{{ db_identifier }}"
         region                : "{{ region }}"
       register                : rds_info
