@@ -10,7 +10,7 @@
 
   tasks:
     - name: Create DB Subnet Group
-      community.aws.rds_subnet_group:
+      rds_subnet_group:
         name          : "{{ db_subnet_group_name }}"
         description   : "{{ db_subnet_group_description }}"
         subnets       : "{{ db_subnets }}"
